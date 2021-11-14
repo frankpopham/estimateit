@@ -9,12 +9,14 @@ estimateit(weightitobj, outcome, data)
 \arguments{
 \item{weightitobj}{A Weightit object}
 
-\item{outcome}{A binary outcome variable coded 0/1}
+\item{outcome}{A binary outcome variable}
 
-\item{df}{A data frame containing the variables}
+\item{data}{A data frame containing the outcome}
 }
 \value{
-Returns a Summary tibble, and the individual effects
+Returns a summary table as a tibble, the model, and the individual effects
+   (X0 = "Control", X1="Treat", D=their difference, RR= their relative "risk",
+   OR=their odds ratio)
 }
 \description{
 Estimate marginal effects for binary exposure and outcome

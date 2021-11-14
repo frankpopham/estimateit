@@ -17,7 +17,11 @@ Imports:
   purrr,
   tibble,
   broom,
-  survey
+  survey,
+  WeightIt,
+  cobalt,
+  tidyselect
 RoxygenNote: 7.1.2
 URL: https://github.com/frankpopham/estimateit
 BugReports: https://github.com/frankpopham/estimateit/issues
+License: MIT + file LICENSE

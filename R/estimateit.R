@@ -1,10 +1,13 @@
 #' Estimate marginal effects for binary exposure and outcome
 #'
 #' @param weightitobj A Weightit object
-#' @param df A data frame containing the variables
-#' @param outcome A binary outcome variable coded 0/1
-#' @return Returns a Summary tibble, and the individual effects
+#' @param data A data frame containing the outcome
+#' @param outcome A binary outcome variable
+#' @return Returns a summary table as a tibble, the model, and the individual effects
+#'    (X0 = "Control", X1="Treat", D=their difference, RR= their relative "risk",
+#'    OR=their odds ratio)
 #' @importFrom magrittr %>%
+#' @export
 #' @examples
 #' library(cobalt)
 #' library(WeightIt)
@@ -18,9 +21,10 @@
 #' E1
 
 estimateit <- function(weightitobj, outcome, data) {
-  df <- select(data, Y={{outcome}}) %>%
+  df <- dplyr::select(data, Y={{outcome}}) %>%
     dplyr::bind_cols(X=weightitobj$treat) %>%
-    dplyr::bind_cols(w=weightitobj$weights)
+    dplyr::bind_cols(w=weightitobj$weights) %>%
+    dplyr::mutate(X=ifelse(X==weightitobj$focal, 1, 0))
 
 out_model_ds <- survey::svydesign(id = ~1, data = df, weights = df$w)
 
@@ -50,12 +54,12 @@ contrasts_ci <- purrr::map(summary, confint) %>%
     purrr::map_dfr(~ tibble::as_tibble(.x), .id = "Effect")
 
 contrasts <- purrr::map_dfr(summary, ~ tibble::as_tibble(.x), .id="Effect") %>%
-  dplyr::bind_cols(select(contrasts_ci, -Effect)) %>%
+  dplyr::bind_cols(dplyr::select(contrasts_ci, -Effect)) %>%
   dplyr::select(Effect, Estimate = nlcon, Conf.low = "2.5 %", Conf.high = "97.5 %") %>%
   dplyr::mutate(dplyr::across(c(Estimate, Conf.low, Conf.high),
                               ~ dplyr::if_else(Effect == "RR", exp(.x), .x))) %>%
   dplyr::bind_rows(sum_model) %>%
   dplyr::mutate(Estimand = weightitobj$estimand) %>%
-  dplyr::select(Estimand, everything())
+  dplyr::select(Estimand, tidyselect::everything())
 return(list(Outcome_model=out_model, X0 = X0, X1 = X1, D = rd, RR = rr, Table=contrasts))
 }
