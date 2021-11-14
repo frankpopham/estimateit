@@ -19,3 +19,5 @@ Imports:
   broom,
   survey
 RoxygenNote: 7.1.2
+URL: https://github.com/frankpopham/estimateit
+BugReports: https://github.com/frankpopham/estimateit/issues
