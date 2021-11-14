@@ -1,0 +1,21 @@
+Package: estimateit
+Type: Package
+Title: Estimate effects for binary exposures and outcomes from a Weightit object
+Version: 0.0.0.9000
+Author: Frank Popham
+Maintainer: Frank Popham <frank.popham@protonmail.com>
+Description: estimateit estimates marginal effects for binary exposures and binary outcomes
+    using inverse probability weights to control for confounding. Use Weightit to estimate ipws
+    then estimateit to obtain outcome effects. At present calculates effect for the relevant
+    population exposed, unexposed, the absolute difference between the two, the relative risk
+    and the odds ratio. Requires tidyverse and survey packages.
+Encoding: UTF-8
+LazyData: true
+Imports: 
+  dplyr,
+  magrittr,
+  purrr,
+  tibble,
+  broom,
+  survey
+RoxygenNote: 7.1.2
