@@ -15,8 +15,10 @@ estimateit(weightitobj, outcome, data)
 }
 \value{
 Returns a summary table as a tibble, the model, and the individual effects
-   (X0 = "Control", X1="Treat", D=their difference, RR= their relative "risk",
-   OR=their odds ratio)
+   (Control, Treatment, D=their difference, logRR= their log relative "risk",
+   logOR=their log odds ratio). The individual effects are svrepstat objects that
+   can be further analysed using relevant survey functions. The table displays the exponential
+   of the log relative effects. In other words the relative risk and the odds ratio.
 }
 \description{
 Estimate marginal effects for binary exposure and outcome
@@ -24,10 +26,10 @@ Estimate marginal effects for binary exposure and outcome
 \examples{
 library(cobalt)
 library(WeightIt)
-
+data("lalonde", package = "cobalt")
 W1 <- weightit(treat ~ age + educ + married +
                 re74, data = lalonde,
-              method = "ps", estimand = "ATT")
+              method = "ps", estimand = "ATE")
 summary(W1)
 bal.tab(W1)
 E1 <- estimateit(W1, nodegree, lalonde)
