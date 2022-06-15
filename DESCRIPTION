@@ -1,7 +1,7 @@
 Package: estimateit
 Type: Package
 Title: Estimate effects for binary exposures and outcomes from a Weightit object
-Version: 0.0.0.9000
+Version: 0.0.0.9100
 Author: Frank Popham
 Maintainer: Frank Popham <frank.popham@protonmail.com>
 Description: estimateit estimates marginal effects for binary exposures and binary outcomes
@@ -12,17 +12,15 @@ Description: estimateit estimates marginal effects for binary exposures and bina
 Encoding: UTF-8
 LazyData: true
 Imports: 
-  dplyr,
-  magrittr,
-  purrr,
-  tibble,
-  broom,
-  survey,
-  WeightIt,
-  cobalt,
-  tidyselect,
-  forcats
-RoxygenNote: 7.1.2
+    dplyr,
+    magrittr,
+    purrr,
+    tibble,
+    survey,
+    tidyselect,
+    stats
+Suggests: WeightIt, tidyr    
+RoxygenNote: 7.2.0
 URL: https://github.com/frankpopham/estimateit
 BugReports: https://github.com/frankpopham/estimateit/issues
 License: MIT + file LICENSE
