@@ -18,9 +18,7 @@ Returns a summary table as a tibble, the model, and the individual effects
    (Control, Treatment, D=their difference, logRR= their log relative "risk",
    logOR=their log odds ratio). The individual effects are svrepstat objects that
    can be further analysed using relevant survey functions. The table displays the exponential
-   of the log relative effects. In other words the relative risk and the odds ratio. If "ATE"
-   is the estimand requested in the call to WeightIt then both marginal and conditional effects
-   are returned. Otherwise only marginal effects are returned at present.
+   of the log relative effects. In other words the relative risk and the odds ratio.
 }
 \description{
 Estimate marginal effects for binary exposure and outcome
