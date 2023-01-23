@@ -7,9 +7,7 @@
 #'    (Control, Treatment, D=their difference, logRR= their log relative "risk",
 #'    logOR=their log odds ratio). The individual effects are svrepstat objects that
 #'    can be further analysed using relevant survey functions. The table displays the exponential
-#'    of the log relative effects. In other words the relative risk and the odds ratio. If "ATE"
-#'    is the estimand requested in the call to WeightIt then both marginal and conditional effects
-#'    are returned. Otherwise only marginal effects are returned at present.
+#'    of the log relative effects. In other words the relative risk and the odds ratio.
 #' @importFrom magrittr %>%
 #' @export
 #' @examples
@@ -42,19 +40,11 @@ forma <- df %>%
   dplyr::select(-c("(Intercept)", Y, treat, w)) %>%
   names()
 
-formb <- paste0("Y ~ treat*(",paste(forma, collapse="+"), ")")
-
 out_model_ds <- survey::svydesign(id = ~1, data = df, weights = df$w)
 
 out_model <- survey::svyglm(Y ~ treat, family = binomial, design = out_model_ds)
 
 names(out_model$coefficients)[2]  <- "treat1"
-
-if(weightitobj$estimand=="ATE") {
-out_c_model <- survey::svyglm(stats::formula(paste(formb, collapse = " ")),
-                              family = binomial, design = out_model_ds)
-names(out_c_model$coefficients)[2]  <- "treat1"
-}
 
 outta <- function(model) {
 out <- survey::svycontrast(model, list(X0l=c("(Intercept)"=1),
@@ -72,9 +62,6 @@ list(Control=Control, Treated=Treated, D=D, RR = logRR, OR=logOR)
 
 marginal <- outta(out_model)
 
-if(weightitobj$estimand=="ATE") {
-conditional <- outta(out_c_model)
-}
 
 #no tidy for svyrep - this based on https://www.tidymodels.org/learn/develop/broom/
 tidyup <- function(x, conf.int = TRUE, conf.level = 0.95) {
@@ -89,8 +76,6 @@ tidyup <- function(x, conf.int = TRUE, conf.level = 0.95) {
 result
 }
 
-
-
 tabletime <- function(alist) {
   purrr::map_dfr(alist, ~ tidyup(.x), .id="effect") %>%
   dplyr::mutate(dplyr::across(c(estimate, conf.low, conf.high),
@@ -101,17 +86,8 @@ tabletime <- function(alist) {
 
 marginal2 <- tabletime(marginal)
 
-if(weightitobj$estimand=="ATE") {
-conditional2 <- tabletime(conditional)
-}
 
-if(weightitobj$estimand=="ATE") {
 return(list(marginal=list("Outcome model"=out_model, effects=marginal,
-                          "Effects table"=marginal2),
-       conditional=list("Outcome model"=out_c_model, effects=conditional,
-                         "Effects table"=conditional2)))
-}  else {
-  return(list(marginal=list("Outcome model"=out_model, effects=marginal,
                             "Effects table"=marginal2)))
 }
-}
+
